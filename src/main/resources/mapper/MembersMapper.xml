@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.ict.edu2.mapper.MemberMapper">
+    <!-- 아이디로 users 테이블에 있는지 찾기 --> 
+    <select id="selectMember"  resultType="UserVO">
+        SELECT * FROM users WHERE id = #{id}
+    </select>
+
+    <select id="getGuestList" resultType="GuestVO">
+      select * from guestbook order by idx
+    </select>
+
+    <select id="getAdminList" resultType="MembersVO">
+      select * from admin_member order by created_at
+    </select>
+
+    <!-- email로 users 테이블에 있는지 찾기 --> 
+    <select id="findUserByEmail" parameterType ="String" resultType="UserVO">
+        select * from users where email = #{email}
+    </select>
+
+    <!-- sns가 처음 로그인 했을 때 -->
+     <insert id="insertUser" parameterType="UserVO">
+      INSERT INTO users (
+            id, password, email, phone, name, provider, created_at, updated_at, last_login,kakao, naver, google
+        )
+        VALUES (
+            #{id},
+            #{password},
+            #{email},
+            #{phone},
+            #{name},
+            #{provider},
+            NOW(), 
+            NOW(), 
+            NOW(),
+            #{kakao},
+            #{naver},
+            #{google}
+        )
+     </insert>
+
+     <!-- 처음이 아니면 업데이트-->
+      <update id="updateUser" parameterType="UserVO">
+        Update users
+        set  last_login = NOW()
+        where id = #{id}
+      </update>
+
+</mapper>
